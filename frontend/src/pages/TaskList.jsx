@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -15,10 +16,11 @@ import {
   Typography,
   Button,
 } from "@mui/material";
-import { useQuery } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import Header from "../components/Header";
 
 export default function TaskList() {
+  const queryClient = useQueryClient();
   const {
     data: tasks,
     error,
@@ -43,6 +45,22 @@ export default function TaskList() {
         ? tasks?.filter((task) => task.status === statusFilter)
         : tasks || [],
     [statusFilter, tasks]
+  );
+
+  const deleteMutation = useMutation(
+    async (id) => {
+      const response = await fetch(`http://127.0.0.1:3000/tasks/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("tasks");
+      },
+    }
   );
 
   if (isLoading) return <div>Loading...</div>;
@@ -93,8 +111,22 @@ export default function TaskList() {
                   <TableCell>{task.description}</TableCell>
                   <TableCell>{task.status}</TableCell>
                   <TableCell>
-                    <Button>Update</Button>
-                    <Button sx={{ backgroundColor: "red", color: "white" }}>
+                    <Link
+                      to={`/tasks/${task.id}`}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <Button>View</Button>
+                    </Link>
+                    <Link
+                      to={`/tasks/${task.id}/edit`}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <Button>Update</Button>
+                    </Link>
+                    <Button
+                      sx={{ backgroundColor: "red", color: "white" }}
+                      onClick={() => deleteMutation.mutate(task.id)}
+                    >
                       Delete
                     </Button>
                   </TableCell>
