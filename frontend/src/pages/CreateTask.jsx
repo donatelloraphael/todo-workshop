@@ -10,9 +10,11 @@ export default function CreateTask() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
   const createTaskMutation = useMutation(
     async (newTask) => {
-      const response = await fetch("http://127.0.0.1:3000/tasks", {
+      const response = await fetch(`${baseUrl}/tasks`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

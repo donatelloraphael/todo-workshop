@@ -16,6 +16,8 @@ import {
 import Header from "../components/Header";
 
 export default function UpdateTask() {
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -25,7 +27,7 @@ export default function UpdateTask() {
     error,
     isLoading,
   } = useQuery(["task", id], async () => {
-    const response = await fetch(`http://127.0.0.1:3000/tasks/${id}`);
+    const response = await fetch(`${baseUrl}/tasks/${id}`);
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
@@ -46,7 +48,7 @@ export default function UpdateTask() {
 
   const updateTaskMutation = useMutation(
     async (updatedTask) => {
-      const response = await fetch(`http://127.0.0.1:3000/tasks/${id}`, {
+      const response = await fetch(`${baseUrl}/tasks/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -68,7 +70,7 @@ export default function UpdateTask() {
 
   const deleteTaskMutation = useMutation(
     async () => {
-      const response = await fetch(`http://127.0.0.1:3000/tasks/${id}`, {
+      const response = await fetch(`${baseUrl}/tasks/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) {

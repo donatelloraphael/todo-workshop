@@ -3,6 +3,8 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import { Button, Container, Typography, CircularProgress } from "@mui/material";
 
 export default function ViewTask() {
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -12,7 +14,7 @@ export default function ViewTask() {
     error,
     isLoading,
   } = useQuery(["task", id], async () => {
-    const response = await fetch(`http://127.0.0.1:3000/tasks/${id}`);
+    const response = await fetch(`${baseUrl}/tasks/${id}`);
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
@@ -21,7 +23,7 @@ export default function ViewTask() {
 
   const deleteMutation = useMutation(
     async () => {
-      const response = await fetch(`http://127.0.0.1:3000/tasks/${id}`, {
+      const response = await fetch(`${baseUrl}/tasks/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) {

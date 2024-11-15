@@ -20,13 +20,16 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import Header from "../components/Header";
 
 export default function TaskList() {
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
   const queryClient = useQueryClient();
+
   const {
     data: tasks,
     error,
     isLoading,
   } = useQuery("tasks", async () => {
-    const response = await fetch("http://127.0.0.1:3000/tasks");
+    const response = await fetch(`${baseUrl}/tasks`);
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
@@ -49,7 +52,7 @@ export default function TaskList() {
 
   const deleteMutation = useMutation(
     async (id) => {
-      const response = await fetch(`http://127.0.0.1:3000/tasks/${id}`, {
+      const response = await fetch(`${baseUrl}/tasks/${id}`, {
         method: "DELETE",
       });
       if (!response.ok) {
