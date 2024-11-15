@@ -1,13 +1,6 @@
-import { Transform } from 'class-transformer';
-import { IsInt, IsNotEmpty, IsOptional, IsString, Min } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class UpdateTaskDto {
-  @Min(1)
-  @IsInt()
-  @Transform(({ value }) => parseInt(value, 10))
-  @IsOptional()
-  id: number;
-
   @IsNotEmpty()
   @IsString()
   @IsOptional()
